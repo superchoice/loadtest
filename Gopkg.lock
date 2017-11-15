@@ -3,8 +3,20 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/streadway/quantile"
+  packages = ["."]
+  revision = "b0c588724d25ae13f5afb3d90efec0edc636432b"
+
+[[projects]]
+  name = "github.com/tsenart/vegeta"
+  packages = ["lib"]
+  revision = "9f28db162ce19bb52817af4fd9b5801b1f2772c5"
+  version = "v6.3.0"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/net"
-  packages = ["context"]
+  packages = ["context","http2","http2/hpack","idna","lex/httplex"]
   revision = "a337091b0525af65de94df2eb7e98bd9962dcbe2"
 
 [[projects]]
@@ -13,9 +25,15 @@
   packages = ["errgroup"]
   revision = "fd80eb99c8f653c847d294a001bdf2a3a6f768f5"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/text"
+  packages = ["collate","collate/build","internal/colltab","internal/gen","internal/tag","internal/triegen","internal/ucd","language","secure/bidirule","transform","unicode/bidi","unicode/cldr","unicode/norm","unicode/rangetable"]
+  revision = "88f656faf3f37f690df1a32515b479415e1a6769"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "412a4a8202072dc73711c23e356abcb80f15bca70997867eacedf31dfe7d41bc"
+  inputs-digest = "71399c930197be9727893b35d144a73150ea003bb957708d4a1ec573aaf4647b"
   solver-name = "gps-cdcl"
   solver-version = 1
