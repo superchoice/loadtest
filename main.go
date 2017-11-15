@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"context"
 
-	"github.com/kettsun0123/loadtest/scenarios"
 	"golang.org/x/sync/errgroup"
 	"os"
 	"os/signal"
 	"syscall"
+	"github.com/tsenart/vegeta/lib"
+	"encoding/json"
 )
 
 // option parameters
@@ -39,14 +40,10 @@ func main() {
 	switch Scenario(scenario) {
 	case ScenarioALL:
 		var err error
-		if eg, err = scenarios.AttacksAll(ctx); err != nil {
+		if eg, err = attacksAll(ctx); err != nil {
 			fmt.Println(err)
 			return
 		}
-	case ScenarioBetsOnly:
-		eg = scenarios.AttacksBets(ctx)
-	case ScenarioLaunch:
-		eg = scenarios.AttacksLaunch(ctx)
 	default:
 		fmt.Printf("unknown scenario: %s\n", scenario)
 		return
@@ -114,7 +111,7 @@ func parseOptions() error {
 		return errors.New("urlPrefix required")
 	}
 	switch Scenario(scenario) {
-	case ScenarioALL, ScenarioBetsOnly, ScenarioLaunch:
+	case ScenarioALL:
 	default:
 		return errors.New("unknown scenario")
 	}
@@ -146,8 +143,6 @@ type Scenario string
 
 const (
 	ScenarioALL          Scenario = "all"
-	ScenarioBetsOnly Scenario = "bets"
-	ScenarioLaunch       Scenario = "launch"
 )
 
 type attackOptions struct {
@@ -156,12 +151,77 @@ type attackOptions struct {
 	duration time.Duration
 }
 
+// attacksChannels starts to attack `all` scenario
+func attacksAll(ctx context.Context) (*errgroup.Group, error) {
+	eg, _ := errgroup.WithContext(ctx)
+	return eg, nil
+}
+
+// attack starts to attack
+func attack(ctx context.Context, targeter vegeta.Targeter, opt *attackOptions) error {
+	attacker := vegeta.NewAttacker(vegeta.Workers(opt.worker))
+	go func() {
+		select {
+		case <-ctx.Done():
+			attacker.Stop()
+			if err := ctx.Err(); err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println("cacncel to attack")
+		}
+	}()
+	var metrics vegeta.Metrics
+	for res := range attacker.Attack(targeter, opt.rate, opt.duration) {
+		metrics.Add(res)
+	}
+	metrics.Close()
+
+	return report(&metrics)
+}
+
 const (
 	OutputStdout string = "stdout"
 	OutputJson   string = "json"
 	OutputText   string = "text"
 )
 
+func report(metrics *vegeta.Metrics) error {
+	switch output {
+	case OutputStdout:
+		b, err := json.MarshalIndent(&metrics, "", "\t")
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(b))
+	case OutputJson:
+		reporter := vegeta.NewJSONReporter(metrics)
+		name := fmt.Sprintf("%s_%s.json", scenario, time.Now().Format("2006-01-02_150405"))
+		f, err := os.Create(name)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+		return reporter.Report(f)
+	case OutputText:
+		reporter := vegeta.NewTextReporter(metrics)
+		name := fmt.Sprintf("%s_%s.txt", scenario, time.Now().Format("2006-01-02_150405"))
+		f, err := os.Create(name)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+		return reporter.Report(f)
+
+	}
+	return errors.New("unknown output type")
+
+}
+
+/*
+ *
+ * function confirmation
+ *
+ */
 func Confirm() error {
 	fmt.Println("continue (y/N)")
 	var confirm string
