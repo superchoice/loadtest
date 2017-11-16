@@ -30,9 +30,6 @@ Usage
 ```
 $ go get github.com/superchoice/loadtest
 $ cd $GOPATH/src/github.com/superchoice/loadtest/
-
-build binary
-$ make build
 ```
 
 ## Note
