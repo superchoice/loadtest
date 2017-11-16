@@ -37,14 +37,20 @@ $ cd $GOPATH/src/github.com/superchoice/loadtest/
     + Vegeta
         - Golang製
         - ライブラリとしての利用も想定されているため，カスタマイズ性が高い
+        - abemaのcatalog-apiで採用されている実績あり
+            + abemaではVegetaの接続周りでうまく負荷がかからない事象があったらしく，部分的にwrkを使用している
         - ドラゴンボール好きにはたまらない
     + Gotling
         - Golang製
-        - 負荷テストのメトリクスはyamlで定義する
+        - 負荷テストはyamlで定義する
         - 最終メンテナンスは2017/04/15のreadmeのアップデート
+        - カスタマイズ性が低いため，見送り
     + k6
         - Golang + JavaScript
         - スクリプトはJSで記述する
+    + Goad
+        - Golang製
+        - AWS Lambdaを利用する
 
 ## Author
 
