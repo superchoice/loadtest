@@ -154,9 +154,11 @@ type attackOptions struct {
 // attacksChannels starts to attack `all` scenario
 func attacksAll(ctx context.Context) (*errgroup.Group, error) {
 	eg, _ := errgroup.WithContext(ctx)
+	// TODO ここに負荷試験のシナリオを記述
 	return eg, nil
 }
 
+// TODO ベースとなる負荷かけ処理をここに記述
 // attack starts to attack
 func attack(ctx context.Context, targeter vegeta.Targeter, opt *attackOptions) error {
 	attacker := vegeta.NewAttacker(vegeta.Workers(opt.worker))
