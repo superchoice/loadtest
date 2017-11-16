@@ -34,21 +34,22 @@ $ cd $GOPATH/src/github.com/superchoice/loadtest/
 
 ## Note
 - いくつかGolangかつOSSな負荷試験ツールについて調べました
-    + Vegeta
+    + Vegeta（https://github.com/tsenart/vegeta）
         - Golang製
         - ライブラリとしての利用も想定されているため，カスタマイズ性が高い
         - abemaのcatalog-apiで採用されている実績あり
-            + abemaではVegetaの接続周りでうまく負荷がかからない事象があったらしく，部分的にwrkを使用している
+            + abemaではVegetaの接続周りでうまく負荷がかからない事象があったらしく，
+            部分的にwrkを使用している
         - ドラゴンボール好きにはたまらない
-    + Gotling
+    + Gotling（https://github.com/eriklupander/gotling）
         - Golang製
         - 負荷テストはyamlで定義する
         - 最終メンテナンスは2017/04/15のreadmeのアップデート
         - カスタマイズ性が低いため，見送り
-    + k6
+    + k6（https://github.com/loadimpact/k6）
         - Golang + JavaScript
         - スクリプトはJSで記述する
-    + Goad
+    + Goad（https://github.com/goadapp/goad）
         - Golang製
         - AWS Lambdaを利用する
 
